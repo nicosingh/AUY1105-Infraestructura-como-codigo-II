@@ -105,38 +105,14 @@ jobs:
       with:
         terraform_version: ${{ env.TF_VERSION }}
 
-    - name: Install Azure CLI
-      run: |
-        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+    - name: Install Azure CLI and Login
+      uses: ./.github/actions/azure-login
 
-    - name: Azure Login with Device Code
-      run: |
-        echo "Starting Azure login with device code..."
-        echo "You will see a code and URL below. Open the URL in your browser and enter the code to authenticate."
-        echo ""
-        az login --use-device-code
-        echo ""
-        echo "Azure login successful!"
-        az account show --query "{subscriptionId:id, tenantId:tenantId, user:user.name}" --output table
-
-    - name: Create/Select Terraform Workspace
-      working-directory: ${{ env.WORKING_DIR }}
-      env:
-        ARM_USE_CLI: true
-      run: |
-        terraform init
-        WORKSPACE_NAME="dev"
-        
-        # Check if workspace exists
-        if terraform workspace list | grep -q "$WORKSPACE_NAME"; then
-          echo "Workspace $WORKSPACE_NAME exists, selecting it"
-          terraform workspace select $WORKSPACE_NAME
-        else
-          echo "Creating new workspace $WORKSPACE_NAME"
-          terraform workspace new $WORKSPACE_NAME
-        fi
-        
-        echo "Current workspace: $(terraform workspace show)"
+    - name: Setup Terraform Workspace
+      uses: ./.github/actions/terraform-workspace
+      with:
+        working-directory: ${{ env.WORKING_DIR }}
+        workspace-name: dev
 
     - name: Terraform Plan
       working-directory: ${{ env.WORKING_DIR }}
@@ -209,38 +185,14 @@ jobs:
       with:
         terraform_version: ${{ env.TF_VERSION }}
 
-    - name: Install Azure CLI
-      run: |
-        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+    - name: Install Azure CLI and Login
+      uses: ./.github/actions/azure-login
 
-    - name: Azure Login with Device Code
-      run: |
-        echo "Starting Azure login with device code..."
-        echo "You will see a code and URL below. Open the URL in your browser and enter the code to authenticate."
-        echo ""
-        az login --use-device-code
-        echo ""
-        echo "Azure login successful!"
-        az account show --query "{subscriptionId:id, tenantId:tenantId, user:user.name}" --output table
-
-    - name: Create/Select Terraform Workspace
-      working-directory: ${{ env.WORKING_DIR }}
-      env:
-        ARM_USE_CLI: true
-      run: |
-        terraform init
-        WORKSPACE_NAME="dev"
-        
-        # Check if workspace exists
-        if terraform workspace list | grep -q "$WORKSPACE_NAME"; then
-          echo "Workspace $WORKSPACE_NAME exists, selecting it"
-          terraform workspace select $WORKSPACE_NAME
-        else
-          echo "Workspace $WORKSPACE_NAME does not exist. Nothing to destroy."
-          exit 0
-        fi
-        
-        echo "Current workspace: $(terraform workspace show)"
+    - name: Setup Terraform Workspace
+      uses: ./.github/actions/terraform-workspace
+      with:
+        working-directory: ${{ env.WORKING_DIR }}
+        workspace-name: dev
 
     - name: Terraform Destroy
       working-directory: ${{ env.WORKING_DIR }}

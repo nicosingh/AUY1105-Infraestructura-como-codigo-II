@@ -1,0 +1,35 @@
+name: 'Setup Terraform Workspace'
+description: 'Initialize Terraform and create/select workspace'
+author: 'Your Name'
+
+inputs:
+  working-directory:
+    description: 'Working directory for Terraform'
+    required: true
+  workspace-name:
+    description: 'Name of the workspace to create/select'
+    required: true
+    default: 'dev'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Create/Select Terraform Workspace
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        ARM_USE_CLI: true
+      run: |
+        terraform init
+        WORKSPACE_NAME="${{ inputs.workspace-name }}"
+        
+        # Check if workspace exists
+        if terraform workspace list | grep -q "$WORKSPACE_NAME"; then
+          echo "Workspace $WORKSPACE_NAME exists, selecting it"
+          terraform workspace select $WORKSPACE_NAME
+        else
+          echo "Creating new workspace $WORKSPACE_NAME"
+          terraform workspace new $WORKSPACE_NAME
+        fi
+        
+        echo "Current workspace: $(terraform workspace show)"

@@ -1,0 +1,21 @@
+name: 'Azure Login with Device Code'
+description: 'Install Azure CLI and authenticate using device code'
+author: 'Your Name'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Azure CLI
+      shell: bash
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+    - name: Azure Login with Device Code
+      shell: bash
+      run: |
+        echo "Starting Azure login with device code..."
+        echo "You will see a code and URL below. Open the URL in your browser and enter the code to authenticate."
+        echo ""
+        az login --use-device-code
+        echo ""
+        echo "Azure login successful!"
