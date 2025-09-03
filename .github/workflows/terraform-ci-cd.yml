@@ -8,16 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       destroy:
-      - name: Terraform Apply
-      if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-      working-directory: ${{ env.WORKING_DIR }}
-      env:
-        ARM_USE_CLI: true
-        TF_VAR_ambiente: dev
-      run: |
-        echo "Applying Terraform plan..."
-        terraform apply tfplan
-        echo "Terraform apply completed successfully!"ription: 'Destroy infrastructure'
+        description: 'Destroy infrastructure'
         required: false
         default: false
         type: boolean
