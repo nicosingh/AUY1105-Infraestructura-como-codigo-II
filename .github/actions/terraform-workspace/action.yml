@@ -1,6 +1,6 @@
 name: 'Setup Terraform Workspace'
 description: 'Initialize Terraform and create/select workspace'
-author: 'Your Name'
+author: 'Nico Singh'
 
 inputs:
   working-directory:

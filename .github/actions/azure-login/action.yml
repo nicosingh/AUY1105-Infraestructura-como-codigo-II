@@ -1,6 +1,6 @@
 name: 'Azure Login with Device Code'
 description: 'Install Azure CLI and authenticate using device code'
-author: 'Your Name'
+author: 'Nico Singh'
 
 runs:
   using: 'composite'
