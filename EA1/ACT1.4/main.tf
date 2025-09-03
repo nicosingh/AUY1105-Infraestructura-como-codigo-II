@@ -22,18 +22,12 @@ provider "azurerm" {
   subscription_id                 = "bb1ccac7-d7f8-47bf-82c2-f223185cfab9"
 }
 
-variable "ambiente" {
-  type        = string
-  description = "El ambiente de despliegue (ej., dev, staging, prod)."
-  default     = "dev"
-}
-
 module "infraestructura_azure" {
   source = "git::https://gitlab.com/nicosingh/curso-infra-como-codigo-ago-sep-2025.git//clase-4/modulo-interno-azure?ref=6125164b0ccb27ea2f53c950bbbdda3b539115db"
 
   nombre_proyecto = "clase-4"
   ubicacion       = "East US 2"
-  ambiente        = var.ambiente
+  ambiente        = terraform.workspace
 
   nombre_grupo_recursos = "AreaInfraestructura"
 
