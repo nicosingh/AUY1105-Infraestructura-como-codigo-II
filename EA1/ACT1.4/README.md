@@ -148,3 +148,7 @@ Intenta realizar algun otro cambio que consideres pertinente, y genera un nuevo 
 - **Mantenimiento y evolución del proyecto:** Establecer lineamientos claros para la gestión de versiones facilita la identificación de problemas potenciales, asegura la compatibilidad entre versiones y simplifica el mantenimiento a largo plazo del código.
 
 - **Transparencia y confianza:** Un flujo de trabajo bien documentado en GitHub mejora la confianza de los usuarios finales y de los colaboradores al ofrecer visibilidad sobre la evolución del software y las decisiones tomadas a lo largo del tiempo.
+
+## Componentes Terraform
+<!-- BEGIN_TF_DOCS -->
+<!-- END_TF_DOCS -->

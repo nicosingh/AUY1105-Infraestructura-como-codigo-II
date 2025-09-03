@@ -24,7 +24,7 @@ jobs:
     
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
@@ -32,25 +32,18 @@ jobs:
         terraform_version: ${{ env.TF_VERSION }}
 
     - name: Setup TFLint
-      uses: terraform-linters/setup-tflint@v4
+      uses: terraform-linters/setup-tflint@v5
       with:
         tflint_version: latest
 
     - name: Setup Python for Checkov
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 
     - name: Install Checkov
       run: |
         pip install checkov
-
-    - name: Install terraform-docs
-      run: |
-        curl -sSLo ./terraform-docs.tar.gz https://terraform-docs.io/dl/v0.17.0/terraform-docs-v0.17.0-$(uname)-amd64.tar.gz
-        tar -xzf terraform-docs.tar.gz
-        chmod +x terraform-docs
-        sudo mv terraform-docs /usr/local/bin/
 
     - name: Terraform Format Check
       working-directory: ${{ env.WORKING_DIR }}
@@ -77,12 +70,12 @@ jobs:
       continue-on-error: true
 
     - name: Generate terraform-docs
-      working-directory: ${{ env.WORKING_DIR }}
-      run: |
-        terraform-docs markdown . > terraform-docs-output.md
-        echo "## Terraform Documentation" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        cat terraform-docs-output.md >> $GITHUB_STEP_SUMMARY
+      uses: terraform-docs/gh-actions@v1.4.1
+      with:
+        working-dir: ${{ env.WORKING_DIR }}
+        output-file: README.md
+        output-method: inject
+        git-push: "true"
 
     - name: Upload terraform-docs as artifact
       uses: actions/upload-artifact@v4
@@ -98,7 +91,7 @@ jobs:
     
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
@@ -179,7 +172,7 @@ jobs:
     
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
