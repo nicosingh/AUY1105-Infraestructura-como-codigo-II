@@ -56,6 +56,7 @@ jobs:
 
     - name: Run Checkov
       uses: bridgecrewio/checkov-action@v12
+      working-directory: ${{ env.WORKING_DIR }}
       with:
         output_format: cli
         output_file_path: console
