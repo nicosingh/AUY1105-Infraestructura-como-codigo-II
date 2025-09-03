@@ -97,7 +97,6 @@ jobs:
       working-directory: ${{ env.WORKING_DIR }}
       env:
         ARM_USE_CLI: true
-        TF_VAR_ambiente: dev
       run: |
         echo "Generating Terraform plan..."
         terraform plan -input=false -out=tfplan
@@ -123,7 +122,6 @@ jobs:
       working-directory: ${{ env.WORKING_DIR }}
       env:
         ARM_USE_CLI: true
-        TF_VAR_ambiente: dev
       run: |
         echo "Applying Terraform plan..."
         terraform apply tfplan
@@ -178,6 +176,5 @@ jobs:
       working-directory: ${{ env.WORKING_DIR }}
       env:
         ARM_USE_CLI: true
-        TF_VAR_ambiente: dev
       run: |
         terraform destroy -input=false -auto-approve
