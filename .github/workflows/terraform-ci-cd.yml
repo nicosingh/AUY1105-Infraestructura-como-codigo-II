@@ -102,7 +102,7 @@ jobs:
         terraform plan -input=false -out=tfplan
         echo "## Terraform Plan" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
         terraform show tfplan -no-color >> $GITHUB_STEP_SUMMARY
         echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
