@@ -73,7 +73,7 @@ jobs:
     - name: Run Checkov
       working-directory: ${{ env.WORKING_DIR }}
       run: |
-        checkov -f main.tf --framework terraform --check CKV_AZURE_1,CKV_AZURE_2,CKV_AZURE_3 --compact --quiet
+        checkov -d . -s
       continue-on-error: true
 
     - name: Generate terraform-docs
