@@ -91,7 +91,7 @@ jobs:
       uses: ./.github/actions/terraform-workspace
       with:
         working-directory: ${{ env.WORKING_DIR }}
-        workspace-name: ${{ github.environment }}
+        workspace-name: dev
 
     - name: Terraform Plan
       working-directory: ${{ env.WORKING_DIR }}
@@ -109,7 +109,7 @@ jobs:
     - name: Upload Plan as Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan-${{ github.environment }}
+        name: terraform-plan-dev
         path: |
           ${{ env.WORKING_DIR }}/tfplan
 
@@ -159,7 +159,7 @@ jobs:
       uses: ./.github/actions/terraform-workspace
       with:
         working-directory: ${{ env.WORKING_DIR }}
-        workspace-name: ${{ github.environment }}
+        workspace-name: dev
 
     - name: Terraform Destroy
       working-directory: ${{ env.WORKING_DIR }}
