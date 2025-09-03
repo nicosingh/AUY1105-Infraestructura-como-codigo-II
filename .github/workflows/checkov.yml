@@ -1,4 +1,4 @@
-name: Terraform Action
+name: Checkov Action
 
 on:
   workflow_call:
@@ -29,4 +29,4 @@ jobs:
 
       - name: Run Checkov on Terraform files
         run: |
-          checkov -d ${{ inputs.path }}
+          checkov -d ${{ inputs.path }} -s

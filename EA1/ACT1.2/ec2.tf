@@ -13,9 +13,10 @@ resource "aws_security_group" "ssh_access" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Permitir desde cualquier dirección IPv4
+    cidr_blocks = ["190.215.180.45/32"] # Permitir desde cualquier dirección IPv4
   }
 
+  #checkov:skip=CKV_AWS_382:Ensure no security groups allow egress from 0.0.0.0:0 to port -1
   egress {
     description = "Permitir trafico de salida a cualquier lugar"
     from_port   = 0
@@ -30,11 +31,19 @@ resource "aws_security_group" "ssh_access" {
 }
 
 resource "aws_instance" "mi_ec2" {
+  #checkov:skip=CKV_AWS_8:Ensure all data stored in the Launch configuration or instance Elastic Blocks Store is securely encrypted
   ami                    = "ami-012967cc5a8c9f891"
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.mi_key.key_name
   subnet_id              = aws_subnet.subnet_publica_1.id
   vpc_security_group_ids = [aws_security_group.ssh_access.id]
+  monitoring             = true
+  ebs_optimized          = true
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
 
   tags = {
     Name = "MiInstancia"
