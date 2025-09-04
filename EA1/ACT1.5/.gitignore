@@ -31,3 +31,4 @@ terraform.rc
 
 # Archivos temporales o de respaldo generados por
 tfplan*
+.DS_Store

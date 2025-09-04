@@ -15,7 +15,7 @@ on:
 
 env:
   TF_VERSION: "1.13.0"
-  WORKING_DIR: "EA1/ACT1.4"
+  WORKING_DIR: "EA1/ACT1.5"
 
 jobs:
   validate:
@@ -105,6 +105,35 @@ jobs:
         echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
         terraform show tfplan -no-color >> $GITHUB_STEP_SUMMARY
         echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        echo "Converting Terraform plan to JSON..."
+        terraform show -json tfplan > tfplan.json
+
+    - name: Setup OPA
+      uses: open-policy-agent/setup-opa@v2
+      with:
+        version: latest
+
+    - name: Run OPA Policy Evaluation
+      working-directory: ${{ env.WORKING_DIR }}
+      run: |
+        echo "Running OPA policy evaluation..."
+        
+        # Simple approach - just check for violations and let OPA handle exit codes
+        if opa eval -d location_policy.rego -i tfplan.json --fail-defined "data.terraform.azure.location.violations[_]"; then
+          echo "OPA policy evaluation passed - no violations found"
+          echo "## OPA Policy Evaluation Results" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** PASSED - All resources comply with location policy" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "OPA policy evaluation failed - violations found"
+          echo "## OPA Policy Evaluation Results" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** FAILED - Policy violations detected" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Violations:**" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+          opa eval -d location_policy.rego -i tfplan.json "data.terraform.azure.location.violations" --format pretty >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          exit 1
+        fi
 
     - name: Upload Plan as Artifact
       uses: actions/upload-artifact@v4
@@ -112,6 +141,7 @@ jobs:
         name: terraform-plan-dev
         path: |
           ${{ env.WORKING_DIR }}/tfplan
+          ${{ env.WORKING_DIR }}/tfplan.json
 
     - name: Terraform Apply
       if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
